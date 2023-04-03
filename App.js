@@ -76,7 +76,6 @@ function ShopStackNavigator() {
 }
 
 export default function App() {
-  const isDarkMode = useColorScheme() === "dark";
   return (
     <SafeAreaProvider>
       {Platform.OS === "ios" ? (

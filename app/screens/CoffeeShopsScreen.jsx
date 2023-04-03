@@ -1,17 +1,24 @@
-import { StatusBar } from "expo-status-bar";
 import {
+  Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
+  StatusBar,
 } from "react-native";
 import React, { Component } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { TouchableWithoutFeedback } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Drinks from "./DrinksScreen";
+import { ScrollView } from "react-native-gesture-handler";
 
 // class Shop extends Component {
 //   render() {
@@ -33,6 +40,7 @@ const Shop = (props) => {
       }}
     >
       <View style={styles.shop}>
+        <Image source={require("../assets/favicon.png")} />
         <Text style={styles.text}>{name}</Text>
       </View>
     </TouchableOpacity>
@@ -40,36 +48,40 @@ const Shop = (props) => {
 };
 
 function CoffeeShops() {
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView>
-      <Shop name="Starbucks" />
-      <Shop name="Dunkin Donuts" />
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <ScrollView>
+        <Shop name="Starbucks" />
+        <Shop name="Dunkin Donuts" />
+        <Shop name="Other shop 1" />
+        <Shop name="Other shop 2" />
+        <Shop name="Other shop 3" />
+        <Shop name="Other shop 4" />
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
-// function CoffeeShops({ navigation }) {
-//   return (
-//     <SafeAreaView>
-//       <ShopStack.Navigator>
-//         <ShopStack.Screen name="shops" component={Shops} />
-//         <ShopStack.Screen name="drinks" component={Drinks} />
-//       </ShopStack.Navigator>
-//     </SafeAreaView>
-//   );
-// }
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: 0,
+    paddingTop: useSafeAreaInsets.top,
+  },
   shop: {
-    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "#fff",
     padding: 40,
     marginHorizontal: 20,
     marginVertical: 10,
     borderRadius: 10,
+    flexDirection: "row",
   },
   text: {
     color: "black",
+    marginLeft: 15,
+    fontSize: 20,
   },
 });
 

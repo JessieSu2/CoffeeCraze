@@ -25,7 +25,9 @@ const DrinkDescription = ({ route }) => {
           <Text style={styles.drinkName}>{selectedDrinkName}</Text>
           <View style={styles.row}>
             <Text>Recipe By:</Text>
-            <Text style={styles.username}>Username</Text>
+            <View style={styles.username}>
+              <Text>Username</Text>
+            </View>
           </View>
         </View>
 
@@ -42,7 +44,6 @@ const DrinkDescription = ({ route }) => {
         <Text style={styles.or}>or</Text>
 
         <View style={styles.bottom}>
-          {/* Title */}
           <Text style={styles.title}>Show The Barista</Text>
         </View>
       </>
@@ -53,6 +54,7 @@ const DrinkDescription = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.sizeOfColumn}>
         <FlatList
+          style={styles.bottom}
           showsVerticalScrollIndicator={false}
           data={[
             { key: "[Size] Mango Dragonfruit Lemonade" },
@@ -70,14 +72,13 @@ const DrinkDescription = ({ route }) => {
 const styles = StyleSheet.create({
   // Whole container
   container: {
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ffc2c2",
     flex: 1,
   },
   // Inner container
   sizeOfColumn: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   // Image
   imageContainer: {
@@ -92,28 +93,40 @@ const styles = StyleSheet.create({
 
   //Drink name + username
   top: {
-    backgroundColor: "yellow",
     flexDirection: "column",
+    paddingVertical: 15,
   },
   drinkName: {
     fontSize: 30,
   },
   row: {
     flexDirection: "row",
+    alignItems: "center",
+  },
+  username: {
+    backgroundColor: "white",
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+    padding: 5,
+    marginLeft: 10,
   },
 
   //HOW TO ORDER???
   middle: {
-    backgroundColor: "blue",
+    paddingVertical: 15,
   },
 
-  or: {
-    backgroundColor: "pink",
-  },
+  or: {},
 
   // SHOW BARISTA!!!
   bottom: {
-    backgroundColor: "orange",
+    paddingTop: 15,
+  },
+
+  title: {
+    fontSize: 22,
   },
 });
 export default DrinkDescription;
