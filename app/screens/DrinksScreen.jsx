@@ -14,6 +14,7 @@ const Drink = (props) => {
       onPress={() => {
         navigation.navigate("Description", {
           selectedDrink: props,
+          name: name,
         });
         console.log("Navigated to: Description");
       }}
@@ -25,7 +26,7 @@ const Drink = (props) => {
   );
 };
 
-function Drinks(props) {
+function Drinks() {
   return (
     <ScrollView>
       <Drink name="Unicorn Drink" />

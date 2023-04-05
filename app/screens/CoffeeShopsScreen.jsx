@@ -36,7 +36,9 @@ const Shop = (props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Drinks");
+        navigation.navigate("Drinks", { name: `${name} drinks` });
+        console.log("pressed ", name);
+        // navigation.setOptions({ title: name });
       }}
     >
       <View style={styles.shop}>
@@ -48,7 +50,6 @@ const Shop = (props) => {
 };
 
 function CoffeeShops() {
-  const insets = useSafeAreaInsets();
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView>

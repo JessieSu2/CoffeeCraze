@@ -32,16 +32,19 @@ function TabNavigator() {
     <BottomTab.Navigator
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
+        tabBarLabel: () => {
+          return null;
+        },
         tabBarStyle: {
           backgroundColor: "rgba(34,36,40,1)",
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "TabOne") {
+          if (route.name === "Stores") {
             iconName = focused ? "home" : "home";
-          } else if (route.name === "TabTwo") {
+          } else if (route.name === "Likes") {
             iconName = focused ? "heart" : "heart";
-          } else if (route.name === "TabThree") {
+          } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -50,9 +53,9 @@ function TabNavigator() {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <BottomTab.Screen name="TabOne" component={ShopStackNavigator} />
-      <BottomTab.Screen name="TabTwo" component={Likes} />
-      <BottomTab.Screen name="TabThree" component={Profile} />
+      <BottomTab.Screen name="Stores" component={ShopStackNavigator} />
+      <BottomTab.Screen name="Likes" component={Likes} />
+      <BottomTab.Screen name="Profile" component={Profile} />
     </BottomTab.Navigator>
   );
 }
@@ -61,16 +64,27 @@ function ShopStackNavigator() {
   return (
     <ShopStack.Navigator>
       <ShopStack.Screen
-        name="shops"
+        name="Shops"
         component={CoffeeShops}
         options={{ headerShown: false }}
       />
       <ShopStack.Screen
         name="Drinks"
         component={Drinks}
-        options={{ headerShown: true, title: false }}
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params.name,
+        })} //title: false
+        // options={({ route }) => ({ title: route.params.name })}
       />
-      <ShopStack.Screen name="Description" component={DrinkDescription} />
+      <ShopStack.Screen
+        name="Description"
+        component={DrinkDescription}
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params.name,
+        })}
+      />
     </ShopStack.Navigator>
   );
 }
