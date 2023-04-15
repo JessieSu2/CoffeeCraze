@@ -23,10 +23,11 @@ import Profile from "./app/screens/ProfileScreen";
 import Likes from "./app/screens/LikesScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import DrinkDescription from "./app/screens/DrinkDescription";
+import Login from "./app/screens/Login";
 
 const BottomTab = createBottomTabNavigator();
 const ShopStack = createStackNavigator();
-
+const Stack = createStackNavigator();
 function TabNavigator() {
   return (
     <BottomTab.Navigator
@@ -106,7 +107,20 @@ export default function App() {
             options={{ headerShown: false }}
           />
         </Stack.Navigator> */}
-        <TabNavigator options={{ headerShown: false }} />
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+        {/* <Login /> */}
+        {/* <TabNavigator options={{ headerShown: false }} /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   );

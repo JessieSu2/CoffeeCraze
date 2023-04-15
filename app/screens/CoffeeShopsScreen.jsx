@@ -8,18 +8,26 @@ import {
   View,
   StatusBar,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   SafeAreaProvider,
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { TouchableWithoutFeedback } from "react-native-web";
+import { FlatList, TouchableWithoutFeedback } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Drinks from "./DrinksScreen";
 import { ScrollView } from "react-native-gesture-handler";
-
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase";
 // class Shop extends Component {
 //   render() {
 //     return (
@@ -33,6 +41,7 @@ import { ScrollView } from "react-native-gesture-handler";
 const Shop = (props) => {
   const navigation = useNavigation();
   const name = props.name;
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -50,16 +59,34 @@ const Shop = (props) => {
 };
 
 function CoffeeShops() {
+  const [shops, setShops] = useState([]);
+  const RenderShops = () => {
+    return shops.map((item) => {
+      return <Shop name={item.name} key={item.id} />;
+    });
+  };
+
+  useEffect(() => {
+    const shopsquery = collection(db, "stores");
+    onSnapshot(shopsquery, (snapshot) => {
+      let shopslist = [];
+      snapshot.docs.map((doc) => shopslist.push({ ...doc.data() }));
+      setShops(shopslist);
+      console.log(shopslist);
+    });
+  }, []);
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <ScrollView>
-        <Shop name="Starbucks" />
+      {/* <ScrollView>
+        <Shop name={shops} />
         <Shop name="Dunkin Donuts" />
         <Shop name="Other shop 1" />
         <Shop name="Other shop 2" />
         <Shop name="Other shop 3" />
         <Shop name="Other shop 4" />
-      </ScrollView>
+        
+      </ScrollView> */}
+      <RenderShops />
     </SafeAreaView>
   );
 }
