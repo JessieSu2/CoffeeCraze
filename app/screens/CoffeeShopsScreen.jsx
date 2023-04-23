@@ -41,12 +41,13 @@ import { db } from "../../firebase";
 const Shop = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-
+  console.log("props: " ,props);
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Drinks", { name: `${name} drinks` });
+        navigation.navigate("Drinks", { name: `${name} drinks`, mykey:props.storekey });
         console.log("pressed ", name);
+        console.log("mtket:", props.storekey);
         // navigation.setOptions({ title: name });
       }}
     >
@@ -62,7 +63,7 @@ function CoffeeShops() {
   const [shops, setShops] = useState([]);
   const RenderShops = () => {
     return shops.map((item) => {
-      return <Shop name={item.name} key={item.id} />;
+      return <Shop name={item.name} id={item.id} storekey={item.key}/>;
     });
   };
 
@@ -70,22 +71,13 @@ function CoffeeShops() {
     const shopsquery = collection(db, "stores");
     onSnapshot(shopsquery, (snapshot) => {
       let shopslist = [];
-      snapshot.docs.map((doc) => shopslist.push({ ...doc.data() }));
+      snapshot.docs.map((doc) => shopslist.push({ ...doc.data(), key:doc.id }));
       setShops(shopslist);
       console.log(shopslist);
     });
   }, []);
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      {/* <ScrollView>
-        <Shop name={shops} />
-        <Shop name="Dunkin Donuts" />
-        <Shop name="Other shop 1" />
-        <Shop name="Other shop 2" />
-        <Shop name="Other shop 3" />
-        <Shop name="Other shop 4" />
-        
-      </ScrollView> */}
       <RenderShops />
     </SafeAreaView>
   );

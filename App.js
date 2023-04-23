@@ -9,7 +9,7 @@ import {
   StatusBar,
   useColorScheme,
 } from "react-native";
-import CoffeeShops from "../TrendyDrinks/app/screens/CoffeeShopsScreen";
+import CoffeeShops from './app/screens/CoffeeShopsScreen'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import {
