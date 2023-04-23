@@ -11,7 +11,7 @@ import { db } from "../../firebase";
 const Drink = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-
+  console.log(props);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -19,7 +19,7 @@ const Drink = (props) => {
           selectedDrink: props,
           name: name,
         });
-        console.log("Navigated to: Description");
+        console.log("DrinksScreen::Navigated to: Description");
       }}
     >
       <View style={styles.drink}>
@@ -31,11 +31,10 @@ const Drink = (props) => {
 
 function Drinks({ route }) {
   const [drinks, setDrinks] = useState([]);
-  const params = route.params;
   const path = route.params.mykey;
+  console.log("DrinksScreen::Collection:", path);
   const RenderDrinks = () => {
     return drinks.map((item) => {
-      console.log("RGIHGIR:", path);
       return (
         <Drink
           name={item.drinkname}

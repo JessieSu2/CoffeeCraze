@@ -7,8 +7,8 @@ import { Icon } from "react-native-elements";
 
 const DrinkDescription = ({ route }) => {
   const selectedDrinkData = route.params.selectedDrink;
-  console.log("route ", route);
-  console.log("dinkr ", selectedDrinkData.name);
+  console.log("DrinkDescription::route ", route);
+  console.log("DrinkDescription::DrinkName ", selectedDrinkData.name);
   const selectedDrinkName = selectedDrinkData.name;
 
   const TopSection = () => {

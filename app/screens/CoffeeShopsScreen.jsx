@@ -42,17 +42,16 @@ import { db } from "../../firebase";
 const Shop = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-  console.log("props: ", props);
+  console.log("CoffeeShops::Shops", props);
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("Drinks", {
           name: `${name} drinks`,
           mykey: props.storekey,
-          key: props.key,
         });
-        console.log("pressed ", name);
-        console.log("mtket:", props.storekey);
+        console.log("CoffeeShops::Pressed ", name);
+        console.log("CoffeeShops::Path Key:", props.storekey);
         // navigation.setOptions({ title: name });
       }}
     >
@@ -69,7 +68,11 @@ function CoffeeShops() {
   const RenderShops = () => {
     return shops.map((item) => {
       return (
-        <Shop name={item.name} id={item.id} storekey={item.key} key={item.id} />
+        <Shop
+          name={item.name} 
+          id={item.id} 
+          storekey={item.key} 
+          key={item.id} />
       );
     });
   };
@@ -82,7 +85,7 @@ function CoffeeShops() {
         shopslist.push({ ...doc.data(), key: doc.id })
       );
       setShops(shopslist);
-      console.log(shopslist);
+      console.log("CoffeeShops::ShopsList", shopslist);
     });
   }, []);
   return (
