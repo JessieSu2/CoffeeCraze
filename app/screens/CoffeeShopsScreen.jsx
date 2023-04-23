@@ -27,6 +27,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+
 import { db } from "../../firebase";
 // class Shop extends Component {
 //   render() {
@@ -41,11 +42,15 @@ import { db } from "../../firebase";
 const Shop = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-  console.log("props: " ,props);
+  console.log("props: ", props);
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Drinks", { name: `${name} drinks`, mykey:props.storekey });
+        navigation.navigate("Drinks", {
+          name: `${name} drinks`,
+          mykey: props.storekey,
+          key: props.key,
+        });
         console.log("pressed ", name);
         console.log("mtket:", props.storekey);
         // navigation.setOptions({ title: name });
@@ -63,7 +68,9 @@ function CoffeeShops() {
   const [shops, setShops] = useState([]);
   const RenderShops = () => {
     return shops.map((item) => {
-      return <Shop name={item.name} id={item.id} storekey={item.key}/>;
+      return (
+        <Shop name={item.name} id={item.id} storekey={item.key} key={item.id} />
+      );
     });
   };
 
@@ -71,7 +78,9 @@ function CoffeeShops() {
     const shopsquery = collection(db, "stores");
     onSnapshot(shopsquery, (snapshot) => {
       let shopslist = [];
-      snapshot.docs.map((doc) => shopslist.push({ ...doc.data(), key:doc.id }));
+      snapshot.docs.map((doc) =>
+        shopslist.push({ ...doc.data(), key: doc.id })
+      );
       setShops(shopslist);
       console.log(shopslist);
     });

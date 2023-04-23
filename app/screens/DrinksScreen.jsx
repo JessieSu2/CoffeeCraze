@@ -11,7 +11,7 @@ import { db } from "../../firebase";
 const Drink = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-  
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -29,14 +29,21 @@ const Drink = (props) => {
   );
 };
 
-function Drinks({route}) {
+function Drinks({ route }) {
   const [drinks, setDrinks] = useState([]);
   const params = route.params;
   const path = route.params.mykey;
   const RenderDrinks = () => {
     return drinks.map((item) => {
-      console.log("RGIHGIR:",path);
-      return <Drink name={item.drinkname} id={item.id} mykey={item.key}/>;
+      console.log("RGIHGIR:", path);
+      return (
+        <Drink
+          name={item.drinkname}
+          id={item.id}
+          storekey={item.key}
+          key={item.id}
+        />
+      );
     });
   };
 
@@ -44,7 +51,9 @@ function Drinks({route}) {
     const drinksquery = collection(db, `/stores/${path}/drinks`);
     onSnapshot(drinksquery, (snapshot) => {
       let drinkslist = [];
-      snapshot.docs.map((doc) => drinkslist.push({ ...doc.data(),key:doc.id }));
+      snapshot.docs.map((doc) =>
+        drinkslist.push({ ...doc.data(), key: doc.id })
+      );
       setDrinks(drinkslist);
       console.log(drinkslist);
     });

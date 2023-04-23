@@ -3,6 +3,7 @@ import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Icon } from "react-native-elements";
 
 const DrinkDescription = ({ route }) => {
   const selectedDrinkData = route.params.selectedDrink;
@@ -23,10 +24,15 @@ const DrinkDescription = ({ route }) => {
         <View style={styles.top}>
           {/* Drink Name */}
           <Text style={styles.drinkName}>{selectedDrinkName}</Text>
-          <View style={styles.row}>
-            <Text>Recipe By:</Text>
-            <View style={styles.username}>
-              <Text>Username</Text>
+          <View style={styles.row1}>
+            <View style={styles.row}>
+              <Text>Recipe By:</Text>
+              <View style={styles.username}>
+                <Text>Username</Text>
+              </View>
+            </View>
+            <View style={styles.icon}>
+              <Icon name="favorite" />
             </View>
           </View>
         </View>
@@ -103,6 +109,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  row1: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: 10,
+  },
   username: {
     backgroundColor: "white",
     width: 100,
@@ -111,6 +122,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 5,
     marginLeft: 10,
+  },
+
+  icon: {
+    justifyContent: "space-evenly",
   },
 
   //HOW TO ORDER???
