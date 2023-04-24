@@ -10,8 +10,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState, useEffect } from "react";
 import { TouchableHighlight } from "react-native";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useNavigation } from "@react-navigation/core";
+import { doc, getDoc } from "firebase/firestore";
 // import handleSignOut from "./SignOut";
 const GiveTime = () => {
   var hours = new Date().getHours();
@@ -28,8 +29,28 @@ const GiveTime = () => {
   // else{<Text>Evening</Text>}
 };
 
+const updateUserInfo = () => {
+  const currentUser = auth.currentUser;
+  console.log("You are ", currentUser);
+  const uid = currentUser.uid;
+  const userData = { lastLoginTime: new Date(), favorites: [] };
+  return db.doc(`user/${uid}`).set(userData, { merge: true });
+};
+
 function Profile() {
   const navigation = useNavigation();
+  const docRef = doc(db, "users", `${auth.currentUser?.uid}`);
+  console.log(`${auth.currentUser?.uid}`);
+
+  const docSnap = getDoc(docRef);
+  console.log(getDoc(docRef));
+
+  if (docSnap.exists) {
+    console.log("Document data:", docSnap.data());
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
   const handleSignOut = () => {
     auth
       .signOut()
@@ -57,16 +78,18 @@ function Profile() {
         <View style={styles.profileContainer}>
           <View style={styles.information}>
             <Text style={styles.regularText}>Username</Text>
-            <Text style={styles.regularText}>DinoSaur</Text>
+            <Text style={styles.regularText}>
+              {auth.currentUser?.displayName}
+            </Text>
           </View>
           <View style={styles.information}>
             <Text style={styles.regularText}>Email</Text>
             <Text style={styles.regularText}>{auth.currentUser?.email}</Text>
           </View>
-          <View style={styles.information}>
+          {/* <View style={styles.information}>
             <Text style={styles.regularText}>Birthday</Text>
             <Text style={styles.regularText}>July 17, 2001</Text>
-          </View>
+          </View> */}
         </View>
         <View style={styles.bottom}>
           <View style={styles.logout}>

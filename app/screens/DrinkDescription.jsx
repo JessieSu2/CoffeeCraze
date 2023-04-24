@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
@@ -32,7 +32,13 @@ const DrinkDescription = ({ route }) => {
               </View>
             </View>
             <View style={styles.icon}>
-              <Icon name="favorite" />
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("DrinkDescription::Favorite Pressed");
+                }}
+              >
+                <Icon name="favorite" />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -33,6 +33,7 @@ if (firebase.apps.length === 0) {
 
 const auth = firebase.auth();
 const db = getFirestore();
+
 export { auth, db };
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase

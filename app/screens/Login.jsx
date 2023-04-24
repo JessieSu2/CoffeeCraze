@@ -8,17 +8,22 @@ import {
   View,
   Alert,
 } from "react-native";
-import { auth } from "../../firebase";
-
+import { auth, createUserDocument, db } from "../../firebase";
+import { collection, getDatabase, ref, set } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.replace("Home");
+        console.log("Login::User uid: ", user.uid);
+        this.userId = user.uid;
+        console.log("Login::User id: ", this.userId);
       }
     });
     return unsubscribe;
@@ -30,11 +35,16 @@ function Login() {
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
+        user.displayName = displayName;
         console.log(user.email);
+        setDoc(doc(db, "users", `${user.uid}`), {
+          email: email,
+          password: password,
+          displayName: displayName,
+        });
       })
       .catch((error) => alert(error.message));
   };
-
   const handleLogin = () => {
     console.log("hel");
     auth
@@ -46,6 +56,7 @@ function Login() {
       })
       .catch((error) => alert(error.message));
   };
+
   return (
     <View style={styles.container} behavior="padding">
       <View style={styles.signIn}>
@@ -53,6 +64,13 @@ function Login() {
       </View>
       {/*  */}
       <View style={styles.inputContainer}>
+        {/* <View style={styles.userInput}>
+          <TextInput
+            placeholder="Username"
+            value={displayName}
+            onChangeText={(text) => setDisplayName(text)}
+          />
+        </View> */}
         <View style={styles.userInput}>
           <TextInput
             placeholder="Email"
