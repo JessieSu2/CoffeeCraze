@@ -12,7 +12,7 @@ import React, { useState, useEffect } from "react";
 import { TouchableHighlight } from "react-native";
 import { auth, db } from "../../firebase";
 import { useNavigation } from "@react-navigation/core";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 // import handleSignOut from "./SignOut";
 const GiveTime = () => {
   var hours = new Date().getHours();
@@ -37,20 +37,41 @@ const updateUserInfo = () => {
   return db.doc(`user/${uid}`).set(userData, { merge: true });
 };
 
+export const updateUserFavorites = (favoriteId, storeId) => {
+  console.log("adding ", favoriteId, " to favorites");
+  const currentUser = auth.currentUser;
+  // console.log("You are ", currentUser);
+  const uid = currentUser.uid;
+  const userData = { storeId: favoriteId };
+  const test = `Favorites.${storeId}`;
+  updateDoc(
+    doc(db, "users", `${uid}`),
+    {
+      favorites: arrayUnion(favoriteId),
+      [`${test}`]: arrayUnion(favoriteId),
+    },
+    { merge: true }
+  ).catch((error) => {
+    console.log("couldnt update doc");
+    alert(error.message);
+  });
+};
+
 function Profile() {
   const navigation = useNavigation();
-  const docRef = doc(db, "users", `${auth.currentUser?.uid}`);
-  console.log(`${auth.currentUser?.uid}`);
+  // const docRef = doc(db, "users", `${auth.currentUser?.uid}`);
+  // console.log(`${auth.currentUser?.uid}`);
 
-  const docSnap = getDoc(docRef);
-  console.log(getDoc(docRef));
+  // const docSnap = getDoc(docRef);
+  // console.log(getDoc(docRef));
 
-  if (docSnap.exists) {
-    console.log("Document data:", docSnap.data());
-  } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
-  }
+  // if (docSnap.exists) {
+  //   console.log("Document data:", docSnap.data());
+  // } else {
+  //   // docSnap.data() will be undefined in this case
+  //   console.log("No such document!");
+  // }
+
   const handleSignOut = () => {
     auth
       .signOut()

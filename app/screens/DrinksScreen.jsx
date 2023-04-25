@@ -11,13 +11,17 @@ import { db } from "../../firebase";
 const Drink = (props) => {
   const navigation = useNavigation();
   const name = props.name;
-  console.log(props);
+  const storekey = props.storekey;
+  const drinkid = props.drinkid;
+  console.log("Drink props::", props);
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("Description", {
           selectedDrink: props,
           name: name,
+          storekey: storekey,
+          drinkid: drinkid,
         });
         console.log("DrinksScreen::Navigated to: Description");
       }}
@@ -35,12 +39,14 @@ function Drinks({ route }) {
   console.log("DrinksScreen::Collection:", path);
   const RenderDrinks = () => {
     return drinks.map((item) => {
+      console.log("drinks itme::", item);
       return (
         <Drink
           name={item.drinkname}
           id={item.id}
-          storekey={item.key}
-          key={item.id}
+          storekey={path}
+          key={item.key}
+          drinkid={item.key}
         />
       );
     });

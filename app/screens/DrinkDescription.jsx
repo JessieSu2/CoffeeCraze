@@ -4,12 +4,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
-
+import { updateUserFavorites } from "./ProfileScreen";
 const DrinkDescription = ({ route }) => {
   const selectedDrinkData = route.params.selectedDrink;
   console.log("DrinkDescription::route ", route);
   console.log("DrinkDescription::DrinkName ", selectedDrinkData.name);
   const selectedDrinkName = selectedDrinkData.name;
+  console.log("DrinkDescriptionData::storkey", selectedDrinkData.storekey);
+  console.log("DrinkDescriptionData::drinkid", selectedDrinkData.drinkid);
 
   const TopSection = () => {
     return (
@@ -35,6 +37,11 @@ const DrinkDescription = ({ route }) => {
               <TouchableOpacity
                 onPress={() => {
                   console.log("DrinkDescription::Favorite Pressed");
+
+                  updateUserFavorites(
+                    selectedDrinkData.drinkid,
+                    selectedDrinkData.storekey
+                  );
                 }}
               >
                 <Icon name="favorite" />
