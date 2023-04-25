@@ -12,7 +12,17 @@ import React, { useState, useEffect } from "react";
 import { TouchableHighlight } from "react-native";
 import { auth, db } from "../../firebase";
 import { useNavigation } from "@react-navigation/core";
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  QuerySnapshot,
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 // import handleSignOut from "./SignOut";
 const GiveTime = () => {
   var hours = new Date().getHours();
@@ -29,25 +39,25 @@ const GiveTime = () => {
   // else{<Text>Evening</Text>}
 };
 
-const updateUserInfo = () => {
-  const currentUser = auth.currentUser;
-  console.log("You are ", currentUser);
-  const uid = currentUser.uid;
-  const userData = { lastLoginTime: new Date(), favorites: [] };
-  return db.doc(`user/${uid}`).set(userData, { merge: true });
-};
+// const updateUserInfo = () => {
+//   const currentUser = auth.currentUser;
+//   console.log("You are ", currentUser);
+//   const uid = currentUser.uid;
+//   const userData = { lastLoginTime: new Date(), favorites: [] };
+//   return db.doc(`user/${uid}`).set(userData, { merge: true });
+// };
 
 export const updateUserFavorites = (favoriteId, storeId) => {
   console.log("adding ", favoriteId, " to favorites");
   const currentUser = auth.currentUser;
   // console.log("You are ", currentUser);
   const uid = currentUser.uid;
-  const userData = { storeId: favoriteId };
-  const test = `Favorites.${storeId}`;
+  // const userData = { storeId: favoriteId };
+  const test = `favorites.${storeId}`;
   updateDoc(
     doc(db, "users", `${uid}`),
     {
-      favorites: arrayUnion(favoriteId),
+      // favorites: arrayUnion(favoriteId),
       [`${test}`]: arrayUnion(favoriteId),
     },
     { merge: true }
@@ -55,6 +65,17 @@ export const updateUserFavorites = (favoriteId, storeId) => {
     console.log("couldnt update doc");
     alert(error.message);
   });
+  // updateDoc(
+  //   doc(db, "users", `${uid}`),
+  //   {
+  //     // favorites: arrayUnion(favoriteId),
+  //     [`${test}`]: arrayRemove(favoriteId),
+  //   },
+  //   { merge: true }
+  // ).catch((error) => {
+  //   console.log("couldnt update doc");
+  //   alert(error.message);
+  // });
 };
 
 function Profile() {

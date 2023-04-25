@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { collection, doc, getDoc, query, where, get } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAsync } from "react-async";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 // const Shop = (props) => {
 //   const navigation = useNavigation();
 //   const name = props.name;
@@ -91,10 +91,14 @@ function Likes() {
             console.log("NoFavorites");
             return;
           }
-          favorites.forEach((drinkId) => {
-            console.log(`getting thing ${drinkId}`);
-            console.log(getDoc(doc(db, "stores")));
+          Object.keys(favorites).map((key) => {
+            console.log(key);
+            console.log(favorites[key]);
           });
+          // favorites.forEach((drinkId) => {
+          //   console.log(`getting thing ${drinkId}`);
+          //   // console.log(getDoc(doc(db, "stores")));
+          // });
         } else {
           // docSnap.data() will be undefined in this case
           console.log("No such document!");

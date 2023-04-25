@@ -1,10 +1,11 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
 import { updateUserFavorites } from "./ProfileScreen";
+
 const DrinkDescription = ({ route }) => {
   const selectedDrinkData = route.params.selectedDrink;
   console.log("DrinkDescription::route ", route);
