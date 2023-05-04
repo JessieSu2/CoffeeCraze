@@ -47,51 +47,8 @@ const GiveTime = () => {
 //   return db.doc(`user/${uid}`).set(userData, { merge: true });
 // };
 
-export const updateUserFavorites = (favoriteId, storeId) => {
-  console.log("adding ", favoriteId, " to favorites");
-  const currentUser = auth.currentUser;
-  // console.log("You are ", currentUser);
-  const uid = currentUser.uid;
-  // const userData = { storeId: favoriteId };
-  const test = `favorites.${storeId}`;
-  updateDoc(
-    doc(db, "users", `${uid}`),
-    {
-      // favorites: arrayUnion(favoriteId),
-      [`${test}`]: arrayUnion(favoriteId),
-    },
-    { merge: true }
-  ).catch((error) => {
-    console.log("couldnt update doc");
-    alert(error.message);
-  });
-  // updateDoc(
-  //   doc(db, "users", `${uid}`),
-  //   {
-  //     // favorites: arrayUnion(favoriteId),
-  //     [`${test}`]: arrayRemove(favoriteId),
-  //   },
-  //   { merge: true }
-  // ).catch((error) => {
-  //   console.log("couldnt update doc");
-  //   alert(error.message);
-  // });
-};
-
 function Profile() {
   const navigation = useNavigation();
-  // const docRef = doc(db, "users", `${auth.currentUser?.uid}`);
-  // console.log(`${auth.currentUser?.uid}`);
-
-  // const docSnap = getDoc(docRef);
-  // console.log(getDoc(docRef));
-
-  // if (docSnap.exists) {
-  //   console.log("Document data:", docSnap.data());
-  // } else {
-  //   // docSnap.data() will be undefined in this case
-  //   console.log("No such document!");
-  // }
 
   const handleSignOut = () => {
     auth

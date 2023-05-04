@@ -11,6 +11,7 @@ import {
 import { auth, createUserDocument, db } from "../../firebase";
 import { collection, getDatabase, ref, set } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
+import { User } from "./ProfileScreen";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

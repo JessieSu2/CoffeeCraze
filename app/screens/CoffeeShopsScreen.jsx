@@ -1,44 +1,13 @@
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-  StatusBar,
-} from "react-native";
-import React, { Component, useEffect, useState } from "react";
-import {
-  SafeAreaProvider,
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { FlatList, TouchableWithoutFeedback } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import Drinks from "./DrinksScreen";
-import { ScrollView } from "react-native-gesture-handler";
-import {
-  collection,
-  getDocs,
-  onSnapshot,
-  query,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 
 import { db } from "../../firebase";
-// class Shop extends Component {
-//   render() {
-//     return (
-//       <View style={styles.shop}>
-//         <Text style={styles.text}>{this.props.name}</Text>
-//       </View>
-//     );
-//   }
-// }
-
 const Shop = (props) => {
   const navigation = useNavigation();
   const name = props.name;
@@ -50,8 +19,8 @@ const Shop = (props) => {
           name: `${name} drinks`,
           mykey: props.storekey,
         });
-        console.log("CoffeeShops::Pressed ", name);
-        console.log("CoffeeShops::Path Key:", props.storekey);
+        // console.log("CoffeeShops::Pressed ", name);
+        // console.log("CoffeeShops::Path Key:", props.storekey);
         // navigation.setOptions({ title: name });
       }}
     >
@@ -68,11 +37,7 @@ function CoffeeShops() {
   const RenderShops = () => {
     return shops.map((item) => {
       return (
-        <Shop
-          name={item.name} 
-          id={item.id} 
-          storekey={item.key} 
-          key={item.id} />
+        <Shop name={item.name} id={item.id} storekey={item.key} key={item.id} />
       );
     });
   };
@@ -85,7 +50,7 @@ function CoffeeShops() {
         shopslist.push({ ...doc.data(), key: doc.id })
       );
       setShops(shopslist);
-      console.log("CoffeeShops::ShopsList", shopslist);
+      // console.log("CoffeeShops::ShopsList", shopslist);
     });
   }, []);
   return (

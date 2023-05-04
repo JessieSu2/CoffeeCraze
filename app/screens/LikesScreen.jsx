@@ -1,136 +1,125 @@
-import { Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { collection, doc, getDoc, query, where, get } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  where,
+  get,
+  DocumentSnapshot,
+  onSnapshot,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAsync } from "react-async";
-import { useCallback, useEffect } from "react";
-// const Shop = (props) => {
-//   const navigation = useNavigation();
-//   const name = props.name;
-//   return (
-//     <TouchableOpacity
-//       onPress={() => {
-//         navigation.navigate("Drinks", { name: `${name} drinks` });
-//         console.log("pressed ", name);
-//         // navigation.setOptions({ title: name });
-//       }}
-//     >
-//       <View style={styles.shop}>
-//         <Image source={require("../assets/favicon.png")} />
-//         <Text style={styles.text}>{name}</Text>
-//       </View>
-//     </TouchableOpacity>
-//   );
-// };
-
-// function CoffeeShops() {
-//   return (
-//     <SafeAreaView style={styles.container} edges={["top"]}>
-//       <ScrollView>
-//         <Shop name="Starbucks" />
-//         <Shop name="Dunkin Donuts" />
-//         <Shop name="Other shop 1" />
-//         <Shop name="Other shop 2" />
-//         <Shop name="Other shop 3" />
-//         <Shop name="Other shop 4" />
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// }
-
-// const GetLikes = async () => {
-//   try {
-//     const currentUser = auth.currentUser?.uid;
-//     if (currentUser) {
-//       console.log("getting favorites for", `${currentUser}`);
-//       // const userData = userDoc.data();
-//       // console.log(userData);
-//       // if (!userData) {
-//       //   console.log("NoFavorites");
-//       //   return;
-//       // }
-//       // const favorites = userData.favorites;
-//       // favorites.array.forEach((drinkId) => {
-//       //   console.log(`getting thing ${drinkId}`);
-//       // });
-
-//       const docref = db.collection("Users").doc(`${currentUser}`);
-//       docref
-//         .get()
-//         .then((doc) => {
-//           if (doc.exists) {
-//             console.log("Document dataL", doc.data());
-//           } else {
-//             console.log("No such document");
-//           }
-//         })
-//         .catch((error) => {
-//           console.log("Erorr getting document:", error);
-//         });
-//     }
-//   } catch {
-//     return "error";
-//   }
-// };
-
+import { useCallback, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 function Likes() {
+  const [shops, setShops] = useState([]);
+  const [drinks, setFavDrinks] = useState([]);
+  const isFocused = useIsFocused();
   useEffect(() => {
-    // declare the data fetching function
-    const GetLikes = async () => {
-      const currentUser = auth.currentUser?.uid;
-      if (currentUser) {
-        console.log("getting favorites for", `${currentUser}`);
-        const docRef = doc(db, "users", `${currentUser}`);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
-          console.log("Favorites:", docSnap.get("favorites"));
-          const favorites = docSnap.get("favorites");
-          console.log(favorites);
-          if (!favorites) {
-            console.log("NoFavorites");
-            return;
-          }
-          Object.keys(favorites).map((key) => {
-            console.log(key);
-            console.log(favorites[key]);
-          });
-          // favorites.forEach((drinkId) => {
-          //   console.log(`getting thing ${drinkId}`);
-          //   // console.log(getDoc(doc(db, "stores")));
-          // });
-        } else {
-          // docSnap.data() will be undefined in this case
-          console.log("No such document!");
-        }
-        // console.log(userData);
+    if (isFocused) {
+      // Fetch the likes data when the "Likes" screen is focused
+      GetLikes();
+    }
+  }, [isFocused]);
 
-        // const docref = db.collection("Users").doc(`${currentUser}`);
-        // console.log(docref);
-        // docref
-        //   .get()
-        //   .then((doc) => {
-        //     if (doc.exists) {
-        //       console.log("Document dataL", doc.data());
-        //     } else {
-        //       console.log("No such document");
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     console.log("Erorr getting document:", error);
-        //   });
+  const GetLikes = async () => {
+    const currentUser = auth.currentUser?.uid;
+    if (currentUser) {
+      console.log("getting favorites for", `${currentUser}`);
+      const docRef = doc(db, "users", `${currentUser}`);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        console.log("Favorites:", docSnap.get("favorites"));
+        const favorites = docSnap.get("favorites");
+        // console.log(favorites);
+        if (!favorites) {
+          console.log("NoFavorites");
+          return;
+        }
+        let shopslist = [];
+        let drinkslist = [];
+
+        for (const [key, value] of Object.entries(favorites)) {
+          console.log("key", key);
+          console.log("value", value);
+          const unsub = onSnapshot(doc(db, "stores", `${key}`), (doc) => {
+            console.log("Current data: ", doc.data());
+            shopslist.push(doc.data());
+          });
+
+          for (const item of value) {
+            const docRef = doc(db, `stores/${key}/drinks`, `${item}`);
+            const docSnap1 = await getDoc(docRef);
+            console.log("Doc", docSnap1.data());
+            drinkslist.push(docSnap1.data());
+            console.log("item", item);
+          }
+        }
+        setShops(shopslist);
+        setFavDrinks(drinkslist);
+        console.log("CoffeeShops::ShopsList", shopslist);
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
       }
-    };
-    // call the function
-    GetLikes()
-      // make sure to catch any error
-      .catch(console.error);
-  }, []);
+    }
+  };
+
+  const Shop = (props) => {
+    const navigation = useNavigation();
+    const name = props.name;
+    console.log("CoffeeShops::Shops", props);
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("FavDrinks", {
+            name: `${name} drinks`,
+            mykey: props.storekey,
+          });
+          console.log("CoffeeShops::Pressed ", name);
+          console.log("CoffeeShops::Path Key:", props.storekey);
+          // navigation.setOptions({ title: name });
+        }}
+      >
+        <View style={styles.shop}>
+          <Image source={require("../assets/favicon.png")} />
+          <Text style={styles.text}>{name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+  const RenderShops = () => {
+    return shops.map((item) => {
+      return (
+        <Shop name={item.name} id={item.id} storekey={item.key} key={item.id} />
+      );
+    });
+  };
   return (
     <SafeAreaView>
-      <Text>Likes</Text>
+      <RenderShops />
     </SafeAreaView>
   );
 }
-
+const styles = StyleSheet.create({
+  shop: {
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 40,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    flexDirection: "row",
+  },
+  text: {
+    color: "black",
+    marginLeft: 15,
+    fontSize: 20,
+  },
+});
 export default Likes;

@@ -1,18 +1,107 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useState } from "react";
 import { FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
-import { updateUserFavorites } from "./ProfileScreen";
+import { auth, db } from "../../firebase";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  deleteField,
+} from "firebase/firestore";
+const removeKeyIfEmpty = async (keyToRemove, favoriteStoreKeyPath, uid) => {
+  try {
+    const docRef = doc(db, "users", uid);
+    const documentSnapshot = await getDoc(docRef);
+    if (documentSnapshot.exists()) {
+      const data = documentSnapshot.data();
+      if (data && data.favorites && data.favorites[keyToRemove].length === 0) {
+        await updateDoc(docRef, {
+          [`${favoriteStoreKeyPath}`]: deleteField(),
+        });
+        console.log("Array removed successfully");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateAddUserFavorites = async (drinkId, storeKey) => {
+  const currentUser = auth.currentUser;
+  const uid = currentUser.uid;
+  const favoriteStoreKeyPath = `favorites.${storeKey}`;
+  try {
+    const docRef = doc(db, "users", uid);
+    const documentSnapshot = await getDoc(docRef);
+    const favorites = documentSnapshot.data().favorites;
+    updateDoc(
+      doc(db, "users", `${uid}`),
+      {
+        [`${favoriteStoreKeyPath}`]: arrayUnion(drinkId),
+      },
+      { merge: true }
+    ).catch((error) => {
+      console.log("couldnt update doc");
+      alert(error.message);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const updateRemoveUserFavorites = async (drinkId, storeKey) => {
+  const currentUser = auth.currentUser;
+  const uid = currentUser.uid;
+  const favoriteStoreKeyPath = `favorites.${storeKey}`;
+  try {
+    updateDoc(
+      doc(db, "users", `${uid}`),
+      {
+        [`${favoriteStoreKeyPath}`]: arrayRemove(drinkId),
+      },
+      { merge: true }
+    ).catch((error) => {
+      console.log("couldnt update doc");
+      alert(error.message);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const DrinkDescription = ({ route }) => {
+  const currentUser = auth.currentUser;
+  // console.log("You are ", currentUser);
+  const uid = currentUser.uid;
+  const [liked, setLiked] = useState(false);
   const selectedDrinkData = route.params.selectedDrink;
-  console.log("DrinkDescription::route ", route);
-  console.log("DrinkDescription::DrinkName ", selectedDrinkData.name);
+  const favoriteStoreKeyPath = `favorites.${selectedDrinkData.storekey}`;
+  // console.log("DrinkDescription::route ", route);
+  // console.log("DrinkDescription::DrinkName ", selectedDrinkData.name);
   const selectedDrinkName = selectedDrinkData.name;
-  console.log("DrinkDescriptionData::storkey", selectedDrinkData.storekey);
-  console.log("DrinkDescriptionData::drinkid", selectedDrinkData.drinkid);
+  // console.log("DrinkDescriptionData::storkey", selectedDrinkData.storekey);
+  // console.log("DrinkDescriptionData::drinkid", selectedDrinkData.drinkid);
+  const toggleLike = () => {
+    // Update the liked state67
+    setLiked(!liked);
+    console.log(!liked);
+    if (!liked) {
+      console.log("Added Favorites");
+      updateAddUserFavorites(
+        selectedDrinkData.drinkid,
+        selectedDrinkData.storekey
+      );
+    } else {
+      console.log("Removed Favorites");
+      updateRemoveUserFavorites(
+        selectedDrinkData.drinkid,
+        selectedDrinkData.storekey
+      );
+      removeKeyIfEmpty(selectedDrinkData.storekey, favoriteStoreKeyPath, uid);
+    }
+  };
 
   const TopSection = () => {
     return (
@@ -35,17 +124,12 @@ const DrinkDescription = ({ route }) => {
               </View>
             </View>
             <View style={styles.icon}>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("DrinkDescription::Favorite Pressed");
-
-                  updateUserFavorites(
-                    selectedDrinkData.drinkid,
-                    selectedDrinkData.storekey
-                  );
-                }}
-              >
-                <Icon name="favorite" />
+              <TouchableOpacity onPress={toggleLike}>
+                {liked ? (
+                  <Icon name="favorite" />
+                ) : (
+                  <Icon name="favorite-outline" />
+                )}
               </TouchableOpacity>
             </View>
           </View>

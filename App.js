@@ -24,9 +24,10 @@ import Likes from "./app/screens/LikesScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import DrinkDescription from "./app/screens/DrinkDescription";
 import Login from "./app/screens/Login";
-
+import FavDrinks from "./app/screens/FavDrinksScreen";
 const BottomTab = createBottomTabNavigator();
 const ShopStack = createStackNavigator();
+const FavStack = createStackNavigator();
 const Stack = createStackNavigator();
 function TabNavigator() {
   return (
@@ -55,7 +56,7 @@ function TabNavigator() {
       })}
     >
       <BottomTab.Screen name="Stores" component={ShopStackNavigator} />
-      <BottomTab.Screen name="Likes" component={Likes} />
+      <BottomTab.Screen name="Likes" component={FavNavigator} />
       <BottomTab.Screen name="Profile" component={Profile} />
     </BottomTab.Navigator>
   );
@@ -87,6 +88,38 @@ function ShopStackNavigator() {
         })}
       />
     </ShopStack.Navigator>
+  );
+}
+
+function FavNavigator() {
+  return (
+    <FavStack.Navigator>
+      <FavStack.Screen
+        name="LikesTab"
+        component={Likes}
+        options={({ route }) => ({
+          headerShown: false,
+          // title: route.params.name,
+        })}
+      />
+      <FavStack.Screen
+        name="FavDrinks"
+        component={FavDrinks}
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params.name,
+        })} //title: false
+        // options={({ route }) => ({ title: route.params.name })}
+      />
+      <FavStack.Screen
+        name="Description"
+        component={DrinkDescription}
+        options={({ route }) => ({
+          headerShown: true,
+          // title: route.params.name,
+        })}
+      />
+    </FavStack.Navigator>
   );
 }
 
