@@ -6,12 +6,23 @@ import {
 } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { collection, onSnapshot } from "firebase/firestore";
-
-import { db } from "../../firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../firebase";
+import { ScrollView } from "react-native-gesture-handler";
 const Shop = (props) => {
+  const [imageUrl, setImageUrl] = useState();
   const navigation = useNavigation();
   const name = props.name;
-  console.log("CoffeeShops::Shops", props);
+  const url = props.imageUrl;
+  const storageRef = ref(storage, `storeLogo/${url}`);
+  // console.log("CoffeeShops::Shops", props);
+  getDownloadURL(storageRef)
+    .then((url) => {
+      setImageUrl(url);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   return (
     <TouchableOpacity
       onPress={() => {
@@ -25,7 +36,12 @@ const Shop = (props) => {
       }}
     >
       <View style={styles.shop}>
-        <Image source={require("../assets/favicon.png")} />
+        <View style={styles.image}>
+          <Image
+            source={{ uri: imageUrl }}
+            style={{ flex: 1, resizeMode: "contain" }}
+          />
+        </View>
         <Text style={styles.text}>{name}</Text>
       </View>
     </TouchableOpacity>
@@ -37,7 +53,13 @@ function CoffeeShops() {
   const RenderShops = () => {
     return shops.map((item) => {
       return (
-        <Shop name={item.name} id={item.id} storekey={item.key} key={item.id} />
+        <Shop
+          name={item.name}
+          id={item.id}
+          storekey={item.key}
+          key={item.id}
+          imageUrl={item.imageUrl}
+        />
       );
     });
   };
@@ -50,12 +72,15 @@ function CoffeeShops() {
         shopslist.push({ ...doc.data(), key: doc.id })
       );
       setShops(shopslist);
+
       // console.log("CoffeeShops::ShopsList", shopslist);
     });
   }, []);
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <RenderShops />
+      <ScrollView>
+        <RenderShops />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -69,7 +94,7 @@ const styles = StyleSheet.create({
   shop: {
     alignItems: "center",
     backgroundColor: "#fff",
-    padding: 40,
+    padding: 25,
     marginHorizontal: 20,
     marginVertical: 10,
     borderRadius: 10,
@@ -77,8 +102,13 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "black",
-    marginLeft: 15,
+    // marginLeft: 10,
     fontSize: 20,
+  },
+  image: {
+    height: 85,
+    aspectRatio: 1,
+    resizeMode: "contain",
   },
 });
 

@@ -2,7 +2,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { Icon } from "react-native-elements";
-import { auth, db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
+import { ref, getDownloadURL } from "firebase/storage";
 import {
   doc,
   getDoc,
@@ -142,6 +143,7 @@ const DrinkDescription = ({ route }) => {
   const [liked, setLiked] = useState(false);
   const [howTo, setHowTo] = useState("");
   const [showTo, setShowTo] = useState();
+  const [imageUrl, setImageUrl] = useState();
   const selectedDrinkData = route.params.selectedDrink;
   const favoriteStoreKeyPath = `favorites.${selectedDrinkData.storekey}`;
   // console.log("DrinkDescription::route ", route);
@@ -157,6 +159,27 @@ const DrinkDescription = ({ route }) => {
           const isLiked = await GetLikedData(selectedDrinkData);
           setLiked(isLiked);
           console.log("UseEffect", isLiked);
+          const docRef = doc(
+            db,
+            `stores/${selectedDrinkData.storekey}/drinks`,
+            `${selectedDrinkData.drinkid}`
+          );
+          const querySnapshot = await getDoc(docRef);
+          const howToOrder = querySnapshot.get("howTo");
+          setHowTo(howToOrder);
+          // console.log(showTo);
+          const showBaristaData = querySnapshot.get("showBarista");
+          setShowTo(showBaristaData);
+          const getImageUrl = querySnapshot.get("imageUrl");
+          // console.log(getImageUrl);
+          const storageRef = ref(storage, `drinkImages/${getImageUrl}`);
+          getDownloadURL(storageRef)
+            .then((url) => {
+              setImageUrl(url);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       } catch (error) {
         console.error(error);
@@ -194,35 +217,16 @@ const DrinkDescription = ({ route }) => {
       Alert.alert("Cant like if not logged");
     }
   };
-  const fetchData = async () => {
-    try {
-      const docRef = doc(
-        db,
-        `stores/${selectedDrinkData.storekey}/drinks`,
-        `${selectedDrinkData.drinkid}`
-      );
-      const querySnapshot = await getDoc(docRef);
-
-      const howToOrder = querySnapshot.get("howTo");
-      setHowTo(howToOrder);
-      // console.log(showTo);
-      const showBaristaData = querySnapshot.get("showBarista");
-      setShowTo(showBaristaData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const TopSection = () => {
-    useEffect(() => {
-      fetchData();
-    });
     return (
       <>
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
-            source={require("../assets/favicon.png")}
+            // source={require("../assets/favicon.png")}
+            source={{ uri: imageUrl }}
+            resizeMode="contain"
           />
         </View>
 
@@ -233,7 +237,7 @@ const DrinkDescription = ({ route }) => {
             <View style={styles.row}>
               <Text>Recipe By:</Text>
               <View style={styles.username}>
-                <Text>Username</Text>
+                <Text>CoffeeCraze</Text>
               </View>
             </View>
             <View style={styles.icon}>
@@ -267,6 +271,7 @@ const DrinkDescription = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.sizeOfColumn}>
         <FlatList
+          contentContainerStyle={{ paddingBottom: 100 }}
           style={styles.bottom}
           showsVerticalScrollIndicator={false}
           data={showTo}
@@ -287,6 +292,7 @@ const styles = StyleSheet.create({
   // Inner container
   sizeOfColumn: {
     // paddingHorizontal: 15,
+    // paddingBottom: 15,
   },
   // Image
   imageContainer: {
@@ -295,8 +301,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
+    height: 300,
     width: 200,
-    height: 200,
   },
 
   //Drink name + username

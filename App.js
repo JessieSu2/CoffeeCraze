@@ -167,5 +167,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
+  pads: {
+    paddingTop: 15,
+  },
 });
 //

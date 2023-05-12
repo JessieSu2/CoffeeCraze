@@ -7,6 +7,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCIuBJR5rnypER2V_hBj-2r2FmWbNEclIk",
@@ -33,7 +34,7 @@ if (firebase.apps.length === 0) {
 
 const auth = firebase.auth();
 const db = getFirestore();
-
-export { auth, db };
+const storage = getStorage();
+export { auth, db, storage };
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
