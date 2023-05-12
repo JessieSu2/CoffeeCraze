@@ -23,6 +23,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import LottieView from "lottie-react-native";
 // import handleSignOut from "./SignOut";
 const GiveTime = () => {
   var hours = new Date().getHours();
@@ -47,20 +48,7 @@ const GiveTime = () => {
 //   return db.doc(`user/${uid}`).set(userData, { merge: true });
 // };
 
-function Profile() {
-  const navigation = useNavigation();
-
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => {
-        error.message;
-        console.log(error);
-      });
-  };
+const IsAuthenticated = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.centered}>
@@ -108,11 +96,112 @@ function Profile() {
       </View>
     </SafeAreaView>
   );
+};
+
+export const NotAuthenticated = () => {
+  const navigation = useNavigation();
+  return (
+    <SafeAreaView style={styles.containerNA}>
+      <View>
+        <LottieView
+          autoPlay
+          style={{
+            width: 200,
+            height: 200,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          source={require("../assets/78378-coffeebrownpink.json")}
+        />
+        <TouchableOpacity
+          style={styles.buttonNA}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
+          <Text style={styles.buttonTextNA}>Create an account!</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+function Profile() {
+  const currentUser = auth.currentUser?.uid;
+  const navigation = useNavigation();
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.replace("Login");
+      })
+      .catch((error) => {
+        error.message;
+        console.log(error);
+      });
+  };
+  if (currentUser) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.centered}>
+          <GiveTime />
+          {/* <View>
+            <Text>Username</Text>
+          </View> */}
+          <View>
+            <Image
+              style={styles.image}
+              source={require("../assets/favicon.png")}
+            />
+          </View>
+          <View style={styles.profileContainer}>
+            <View style={styles.information}>
+              {/* <Text style={styles.regularText}>Username</Text> */}
+              <Text style={styles.regularText}>
+                {auth.currentUser?.displayName}
+              </Text>
+            </View>
+            <View style={styles.information}>
+              <Text style={styles.regularText}>Email</Text>
+              <Text style={styles.regularText}>{auth.currentUser?.email}</Text>
+            </View>
+            {/* <View style={styles.information}>
+          <Text style={styles.regularText}>Birthday</Text>
+          <Text style={styles.regularText}>July 17, 2001</Text>
+        </View> */}
+          </View>
+          <View style={styles.bottom}>
+            <View style={styles.logout}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  // Alert.alert("Logged Out");
+                  handleSignOut();
+                }}
+              >
+                <View>
+                  <Text style={styles.logoutText}>Log Out</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  } else {
+    return <NotAuthenticated />;
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    flex: 1,
+    backgroundColor: "#EBDBCC",
+  },
+  containerNA: {
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
   centered: {
@@ -133,6 +222,7 @@ const styles = StyleSheet.create({
     // width: 250,
     // borderRadius: 20,
     // padding: 10,
+
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 5,
@@ -149,20 +239,33 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-    backgroundColor: "#121212",
+    backgroundColor: "#603C30",
     alignItems: "center",
     padding: 10,
   },
   dotText: {
     fontSize: 30,
+    color: "#603C30",
   },
   regularText: {
-    color: "black",
+    color: "#603C30",
     fontSize: 15,
   },
   logoutText: {
-    color: "white",
+    color: "#EBDBCC",
     fontSize: 15,
+  },
+  buttonNA: {
+    borderColor: "#603C30",
+    borderWidth: 2,
+    backgroundColor: "#EBDBCC",
+    textAlign: "center",
+    borderRadius: 10,
+    padding: 10,
+    alignItems: "center",
+  },
+  buttonTextNA: {
+    color: "brown",
   },
 });
 

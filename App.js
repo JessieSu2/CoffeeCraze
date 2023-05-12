@@ -38,7 +38,7 @@ function TabNavigator() {
           return null;
         },
         tabBarStyle: {
-          backgroundColor: "rgba(34,36,40,1)",
+          backgroundColor: "#603C30",
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -51,8 +51,8 @@ function TabNavigator() {
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#F8A621",
+        tabBarInactiveTintColor: "#EFE4C8",
       })}
     >
       <BottomTab.Screen name="Stores" component={ShopStackNavigator} />
@@ -162,7 +162,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#EBDBCC",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,

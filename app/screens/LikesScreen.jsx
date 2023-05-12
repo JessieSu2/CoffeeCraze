@@ -16,7 +16,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import { getDownloadURL, ref } from "firebase/storage";
+import { NotAuthenticated } from "./ProfileScreen";
+
 function Likes() {
+  const currentUser = auth.currentUser?.uid;
   const [shops, setShops] = useState([]);
   const [drinks, setFavDrinks] = useState([]);
   const isFocused = useIsFocused();
@@ -129,11 +132,15 @@ function Likes() {
       );
     });
   };
-  return (
-    <SafeAreaView>
-      <RenderShops />
-    </SafeAreaView>
-  );
+  if (currentUser) {
+    return (
+      <SafeAreaView>
+        <RenderShops />
+      </SafeAreaView>
+    );
+  } else {
+    return <NotAuthenticated />;
+  }
 }
 const styles = StyleSheet.create({
   shop: {

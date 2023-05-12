@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // backgroundColor: "red",
+    backgroundColor: "#EBDBCC",
     justifyContent: "center",
   },
   signIn: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     width: "100%",
-    backgroundColor: "blue",
+    backgroundColor: "#603C30",
     textAlign: "center",
     borderRadius: 10,
     padding: 15,
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
   },
   buttonOutline: {
     marginTop: 5,
-    borderColor: "blue",
-    backgroundColor: "white",
+    borderColor: "#603C30",
+    backgroundColor: "#EBDBCC",
     borderWidth: 2,
   },
   buttonText: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   buttonOutlineText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "blue",
+    color: "#603C30",
   },
 });
 

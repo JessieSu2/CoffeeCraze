@@ -13,8 +13,9 @@ import {
   deleteField,
   onSnapshot,
 } from "firebase/firestore";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
+import { Platform } from "react-native";
 const removeKeyIfEmpty = async (keyToRemove, favoriteStoreKeyPath, uid) => {
   if (uid) {
     try {
@@ -139,6 +140,7 @@ const GetLikedData = async (selectedDrinkData) => {
 };
 
 const DrinkDescription = ({ route }) => {
+  const navigation = useNavigation();
   const uid = auth.currentUser?.uid;
   const [liked, setLiked] = useState(false);
   const [howTo, setHowTo] = useState("");
@@ -152,6 +154,10 @@ const DrinkDescription = ({ route }) => {
   // console.log("DrinkDescriptionData::storkey", selectedDrinkData.storekey);
   // console.log("DrinkDescriptionData::drinkid", selectedDrinkData.drinkid);
   const isFocused = useIsFocused();
+  navigation.setOptions({
+    headerStyle: { backgroundColor: "#603C30" },
+    headerTintColor: "#F8A621",
+  });
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -214,7 +220,49 @@ const DrinkDescription = ({ route }) => {
         removeKeyIfEmpty(selectedDrinkData.storekey, favoriteStoreKeyPath, uid);
       }
     } else {
-      Alert.alert("Cant like if not logged");
+      if (Platform.OS == "ios") {
+        Alert.alert(
+          "Can't Favorite",
+          "If you want to favorite a drink please make an account",
+          [
+            {
+              text: "Ok",
+              onPress: () => {},
+            },
+            {
+              text: "Create an Account",
+              onPress: () => {
+                navigation.navigate("Login");
+              },
+            },
+          ]
+        );
+      } else {
+        Alert.alert(
+          "Can't Favorite",
+          "If you want to favorite a drink please make an account",
+          [
+            {
+              text: "Ok",
+              style: "cancel",
+            },
+            {
+              text: "Create an Account",
+              onPress: () => {
+                navigation.navigate("Login");
+              },
+            },
+          ],
+
+          {
+            cancelable: true,
+            onDismiss: () =>
+              Alert.alert(
+                "This alert was dismissed by tapping outside of the alert dialog."
+              ),
+          }
+        );
+      }
     }
   };
 
@@ -237,15 +285,15 @@ const DrinkDescription = ({ route }) => {
             <View style={styles.row}>
               <Text>Recipe By:</Text>
               <View style={styles.username}>
-                <Text>CoffeeCraze</Text>
+                <Text style={{ color: "#EBDBCC" }}>CoffeeCraze</Text>
               </View>
             </View>
             <View style={styles.icon}>
               <TouchableOpacity onPress={toggleLike}>
                 {liked ? (
-                  <Icon name="favorite" />
+                  <Icon name="favorite" color="#F8A621" underlayColor="black" />
                 ) : (
-                  <Icon name="favorite-outline" />
+                  <Icon name="favorite-outline" color="#F8A621" />
                 )}
               </TouchableOpacity>
             </View>
@@ -286,12 +334,11 @@ const styles = StyleSheet.create({
   // Whole container
   container: {
     alignItems: "center",
-    // backgroundColor: "#ffc2c2",
     flex: 1,
   },
   // Inner container
   sizeOfColumn: {
-    // paddingHorizontal: 15,
+    paddingHorizontal: 30,
     // paddingBottom: 15,
   },
   // Image
@@ -320,10 +367,10 @@ const styles = StyleSheet.create({
   row1: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingRight: 10,
+    paddingRight: 20,
   },
   username: {
-    backgroundColor: "white",
+    backgroundColor: "#603C30",
     width: 100,
     justifyContent: "center",
     alignItems: "center",

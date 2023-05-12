@@ -16,15 +16,26 @@ const Drink = (props) => {
   const drinkid = props.drinkid;
   console.log("Drink props::", props);
   const url = props.imageUrl;
-  const storageRef = ref(storage, `drinkImages/${url}`);
+  if (url) {
+    const storageRef = ref(storage, `drinkImages/${url}`);
+    getDownloadURL(storageRef)
+      .then((url) => {
+        setImageUrl(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    const storageRef = ref(storage, `drinkImages/filler_icon.png`);
+    getDownloadURL(storageRef)
+      .then((url) => {
+        setImageUrl(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   console.log("CoffeeShops::Shops", props);
-  getDownloadURL(storageRef)
-    .then((url) => {
-      setImageUrl(url);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   return (
     <TouchableOpacity
       onPress={() => {
@@ -51,8 +62,13 @@ const Drink = (props) => {
 };
 
 function Drinks({ route }) {
+  const navigation = useNavigation();
   const [drinks, setDrinks] = useState([]);
   const path = route.params.mykey;
+  navigation.setOptions({
+    headerStyle: { backgroundColor: "#603C30" },
+    headerTintColor: "#F8A621",
+  });
   console.log("DrinksScreen::Collection:", path);
   const RenderDrinks = () => {
     return drinks.map((item) => {
@@ -83,18 +99,17 @@ function Drinks({ route }) {
   }, []);
 
   return (
-    <ScrollView>
-      {/* <Drink name={drinks.drinkname} />
-      <Drink name="Rainbow Drink" /> */}
+    <ScrollView style={styles.container}>
       <RenderDrinks />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {},
   drink: {
     justifyContent: "space-between",
-    backgroundColor: "#fff",
+    backgroundColor: "#603C30",
     padding: 15,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -103,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "black",
+    color: "#EBDBCC",
     marginLeft: 15,
     fontSize: 15,
     flex: 1,
