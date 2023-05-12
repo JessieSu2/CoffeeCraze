@@ -145,7 +145,7 @@ function Likes() {
 const styles = StyleSheet.create({
   shop: {
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#603C30",
     padding: 25,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text: {
-    color: "black",
+    color: "#EBDBCC",
     // marginLeft: 10,
     fontSize: 20,
   },

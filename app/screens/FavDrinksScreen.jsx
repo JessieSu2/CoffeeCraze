@@ -55,10 +55,16 @@ const FavDrink = (props) => {
 
 function FavDrinks({ route }) {
   //   const [drinks, setDrinks] = useState([]);
+  const navigation = useNavigation();
   const drinks = route.params.drinks;
   const key = route.params.mykey;
   console.log("FavDrinksScreen::key", route.params.mykey);
   console.log("FavDrinksScreen:", drinks);
+  navigation.setOptions({
+    headerStyle: { backgroundColor: "#603C30" },
+    headerTintColor: "#F8A621",
+    headerBackTitle: "Back",
+  });
   const favStoreDrinks = drinks
     .filter(function (item) {
       return item.storekey == key;
@@ -103,7 +109,7 @@ function FavDrinks({ route }) {
 const styles = StyleSheet.create({
   drink: {
     justifyContent: "space-between",
-    backgroundColor: "#fff",
+    backgroundColor: "#603C30",
     padding: 15,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -112,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "black",
+    color: "#EBDBCC",
     marginLeft: 15,
     fontSize: 15,
     flex: 1,
