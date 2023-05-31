@@ -29,11 +29,11 @@ const GiveTime = () => {
   var hours = new Date().getHours();
   console.log("Hour in 24hr format:", hours);
   if (hours >= 5 && hours < 12) {
-    return <Text style={styles.dotText}>Good Morning! </Text>;
+    return <Text style={styles.dotText}>Good Morning!</Text>;
   } else if (hours >= 12 && hours < 17) {
-    return <Text style={styles.dotText}>Good Afternoon</Text>;
+    return <Text style={styles.dotText}>Good Afternoon!</Text>;
   } else {
-    return <Text style={styles.dotText}>Good Evening</Text>;
+    return <Text style={styles.dotText}>Good Evening!</Text>;
   }
   // else if({hours} `&gte;` 12:00 && {hours} `&lte;` 17:00)
   // {<Text>Afternoon</Text>}
@@ -47,57 +47,6 @@ const GiveTime = () => {
 //   const userData = { lastLoginTime: new Date(), favorites: [] };
 //   return db.doc(`user/${uid}`).set(userData, { merge: true });
 // };
-
-const IsAuthenticated = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.centered}>
-        <GiveTime />
-        <View>
-          <Text>Username</Text>
-        </View>
-        <View>
-          <Image
-            style={styles.image}
-            source={require("../assets/favicon.png")}
-          />
-        </View>
-        <View style={styles.profileContainer}>
-          <View style={styles.information}>
-            <Text style={styles.regularText}>Username</Text>
-            <Text style={styles.regularText}>
-              {auth.currentUser?.displayName}
-            </Text>
-          </View>
-          <View style={styles.information}>
-            <Text style={styles.regularText}>Email</Text>
-            <Text style={styles.regularText}>{auth.currentUser?.email}</Text>
-          </View>
-          {/* <View style={styles.information}>
-            <Text style={styles.regularText}>Birthday</Text>
-            <Text style={styles.regularText}>July 17, 2001</Text>
-          </View> */}
-        </View>
-        <View style={styles.bottom}>
-          <View style={styles.logout}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                // Alert.alert("Logged Out");
-                handleSignOut();
-              }}
-            >
-              <View>
-                <Text style={styles.logoutText}>Log Out</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
 export const NotAuthenticated = () => {
   const navigation = useNavigation();
   return (
@@ -116,7 +65,7 @@ export const NotAuthenticated = () => {
         <TouchableOpacity
           style={styles.buttonNA}
           onPress={() => {
-            navigation.navigate("Login");
+            navigation.navigate("Register");
           }}
         >
           <Text style={styles.buttonTextNA}>Create an account!</Text>
@@ -145,18 +94,30 @@ function Profile() {
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
           <GiveTime />
-          {/* <View>
-            <Text>Username</Text>
-          </View> */}
           <View>
-            <Image
+            <Text style={styles.usernameTitle}>
+              {auth.currentUser?.displayName}
+            </Text>
+          </View>
+          <View>
+            {/* <Image
               style={styles.image}
               source={require("../assets/favicon.png")}
+            /> */}
+            <LottieView
+              autoPlay
+              style={{
+                aspectRatio: 1,
+                height: 200,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              source={require("../assets/44298-coffee-love.json")}
             />
           </View>
           <View style={styles.profileContainer}>
             <View style={styles.information}>
-              {/* <Text style={styles.regularText}>Username</Text> */}
+              <Text style={styles.regularText}>Username</Text>
               <Text style={styles.regularText}>
                 {auth.currentUser?.displayName}
               </Text>
@@ -173,15 +134,13 @@ function Profile() {
           <View style={styles.bottom}>
             <View style={styles.logout}>
               <TouchableOpacity
-                style={styles.button}
+                style={styles.buttons}
                 onPress={() => {
                   // Alert.alert("Logged Out");
                   handleSignOut();
                 }}
               >
-                <View>
-                  <Text style={styles.logoutText}>Log Out</Text>
-                </View>
+                <Text style={styles.buttonText}>Log out</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -197,7 +156,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    backgroundColor: "#EBDBCC",
+    // backgroundColor: "#EBDBCC",
+    backgroundColor: "#eacdb7",
+    width: "100%",
   },
   containerNA: {
     alignItems: "center",
@@ -207,6 +168,8 @@ const styles = StyleSheet.create({
   centered: {
     paddingTop: 30,
     alignItems: "center",
+    width: "80%",
+    flex: 1,
   },
   image: {
     width: 200,
@@ -215,7 +178,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   profileContainer: {
-    width: 300,
+    width: "100%",
   },
   information: {
     // backgroundColor: "#121212",
@@ -230,26 +193,35 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     justifyContent: "flex-end",
+    width: "100%",
   },
   logout: {
     color: "#121212",
     paddingVertical: 10,
-    width: 100,
+    width: "100%",
     borderRadius: 20,
   },
-  button: {
-    borderRadius: 20,
+  buttons: {
+    width: "100%",
     backgroundColor: "#603C30",
+    textAlign: "center",
+    borderRadius: 10,
+    padding: 15,
     alignItems: "center",
-    padding: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
   },
   dotText: {
     fontSize: 30,
     color: "#603C30",
+    fontWeight: 500,
   },
   regularText: {
     color: "#603C30",
-    fontSize: 15,
+    fontSize: 18,
   },
   logoutText: {
     color: "#EBDBCC",
@@ -266,6 +238,10 @@ const styles = StyleSheet.create({
   },
   buttonTextNA: {
     color: "brown",
+  },
+  usernameTitle: {
+    fontSize: 20,
+    paddingTop: 5,
   },
 });
 

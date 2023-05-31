@@ -52,7 +52,13 @@ const Drink = (props) => {
         <View style={styles.image}>
           <Image
             source={{ uri: imageUrl }}
-            style={{ flex: 1, resizeMode: "contain" }}
+            style={{
+              flex: 1,
+              resizeMode: "contain",
+              height: 100,
+              width: 80,
+              borderRadius: 5,
+            }}
           />
         </View>
         <Text style={styles.text}>{name}</Text>
@@ -65,10 +71,6 @@ function Drinks({ route }) {
   const navigation = useNavigation();
   const [drinks, setDrinks] = useState([]);
   const path = route.params.mykey;
-  navigation.setOptions({
-    headerStyle: { backgroundColor: "#603C30" },
-    headerTintColor: "#F8A621",
-  });
   console.log("DrinksScreen::Collection:", path);
   const RenderDrinks = () => {
     return drinks.map((item) => {
@@ -87,6 +89,10 @@ function Drinks({ route }) {
   };
 
   useEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: "#603C30" },
+      headerTintColor: "#F8A621",
+    });
     const drinksquery = collection(db, `/stores/${path}/drinks`);
     onSnapshot(drinksquery, (snapshot) => {
       let drinkslist = [];
@@ -106,7 +112,9 @@ function Drinks({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: "#eacdb7",
+  },
   drink: {
     justifyContent: "space-between",
     backgroundColor: "#603C30",
@@ -118,14 +126,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "#EBDBCC",
+    // color: "#EBDBCC",
+    color: "#FFFFFF",
     marginLeft: 15,
     fontSize: 15,
     flex: 1,
   },
   image: {
-    height: 100,
-    aspectRatio: 1,
     resizeMode: "contain",
   },
 });

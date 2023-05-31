@@ -90,10 +90,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 0,
     paddingTop: useSafeAreaInsets.top,
+    backgroundColor: "#eacdb7",
   },
   shop: {
     alignItems: "center",
     backgroundColor: "#603C30",
+    // backgroundColor: "#2e2521",
     padding: 25,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -101,7 +103,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text: {
-    color: "#EBDBCC",
+    // color: "#EBDBCC",
+    color: "#FFFFFF",
     // marginLeft: 10,
     fontSize: 20,
   },

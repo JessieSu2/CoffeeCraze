@@ -9,11 +9,12 @@ import {
   Alert,
 } from "react-native";
 import { auth, createUserDocument, db } from "../../firebase";
+import { updateProfile } from "firebase/auth";
 import { collection, getDatabase, ref, set } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import { User } from "./ProfileScreen";
 import LottieView from "lottie-react-native";
-function Login() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -30,14 +31,22 @@ function Login() {
     return unsubscribe;
   }, []);
 
-  const handleLogin = () => {
+  const handleCreateAccount = () => {
     console.log("hel");
     auth
-      .signInWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(userCredentials);
+        user.displayName = displayName;
         console.log(user.email);
+        setDoc(doc(db, "users", `${user.uid}`), {
+          email: email,
+          password: password,
+          displayName: displayName,
+        });
+        updateProfile(auth.currentUser, { displayName: displayName }).catch(
+          (err) => console.log(err)
+        );
       })
       .catch((error) => alert(error.message));
   };
@@ -57,17 +66,17 @@ function Login() {
         />
       </View>
       <View style={styles.signIn}>
-        <Text style={styles.signInText}>Sign In</Text>
+        <Text style={styles.signInText}>Create Account</Text>
       </View>
       {/*  */}
       <View style={styles.inputContainer}>
-        {/* <View style={styles.userInput}>
+        <View style={styles.userInput}>
           <TextInput
             placeholder="Username"
             value={displayName}
             onChangeText={(text) => setDisplayName(text)}
           />
-        </View> */}
+        </View>
         <View style={styles.userInput}>
           <TextInput
             placeholder="Email"
@@ -87,24 +96,28 @@ function Login() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             activeOpacity={0.3}
-            style={styles.buttons}
-            onPress={handleLogin}
+            style={[styles.buttons, styles.buttonOutline]}
+            onPress={handleCreateAccount}
           >
-            <Text style={styles.buttonText}>Log In</Text>
+            <Text style={styles.buttonOutlineText}>Create Account</Text>
           </TouchableOpacity>
-          <View style={{ alignItems: "center" }}>
+          <View
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+              marginTop: 15,
+            }}
+          >
+            <Text>Already a user? </Text>
             <TouchableOpacity
               activeOpacity={0.3}
               onPress={() => {
-                navigation.navigate("Register");
+                navigation.navigate("Login");
               }}
             >
-              <Text style={[{ marginTop: 15 }, styles.subText]}>
-                Create an Account
-              </Text>
+              <Text style={styles.subText}>Login</Text>
             </TouchableOpacity>
           </View>
-
           <View style={{ alignItems: "center" }}>
             <Text style={{ margin: 15 }}>or</Text>
             <TouchableOpacity
@@ -153,8 +166,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
     width: "100%",
+    marginTop: 20,
   },
   buttons: {
     width: "100%",
@@ -186,4 +199,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;

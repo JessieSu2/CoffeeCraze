@@ -17,9 +17,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import { getDownloadURL, ref } from "firebase/storage";
 import { NotAuthenticated } from "./ProfileScreen";
+import LottieView from "lottie-react-native";
 
 function Likes() {
   const currentUser = auth.currentUser?.uid;
+  const navigation = useNavigation();
   const [shops, setShops] = useState([]);
   const [drinks, setFavDrinks] = useState([]);
   const isFocused = useIsFocused();
@@ -83,19 +85,29 @@ function Likes() {
   };
 
   const Shop = (props) => {
-    const navigation = useNavigation();
     const name = props.name;
     // console.log("LikesScreen::Shops", props);
     const [imageUrl, setImageUrl] = useState();
     const url = props.imageUrl;
     const storageRef = ref(storage, `storeLogo/${url}`);
-    getDownloadURL(storageRef)
-      .then((url) => {
-        setImageUrl(url);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (url) {
+      getDownloadURL(storageRef)
+        .then((url) => {
+          setImageUrl(url);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      const storageRef = ref(storage, `drinkImages/filler_icon.png`);
+      getDownloadURL(storageRef)
+        .then((url) => {
+          setImageUrl(url);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     return (
       <TouchableOpacity
         onPress={() => {
@@ -132,17 +144,82 @@ function Likes() {
       );
     });
   };
+  const config = {
+    animation: "spring",
+    config: {
+      stiffness: 1000,
+      damping: 500,
+      mass: 3,
+      overshootClamping: true,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 0.01,
+    },
+  };
   if (currentUser) {
-    return (
-      <SafeAreaView>
-        <RenderShops />
-      </SafeAreaView>
-    );
+    console.log(shops);
+    if (shops == []) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <RenderShops />
+        </SafeAreaView>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.centered}>
+            <Text style={{ color: "#603C30", fontSize: 18 }}>
+              Find your coffee that fills your craze!
+            </Text>
+            <LottieView
+              autoPlay
+              style={{
+                width: 200,
+                height: 200,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              source={require("../assets/44298-coffee-love.json")}
+            />
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => {
+                navigation.navigate("Shops");
+              }}
+            >
+              <Text style={styles.buttonText}>Find Your Coffe Craze!</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      );
+    }
   } else {
     return <NotAuthenticated />;
   }
 }
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#eacdb7",
+    flex: 1,
+    width: "100%",
+  },
+  buttons: {
+    width: "80%",
+    backgroundColor: "#603C30",
+    textAlign: "center",
+    borderRadius: 10,
+    padding: 15,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  centered: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
   shop: {
     alignItems: "center",
     backgroundColor: "#603C30",

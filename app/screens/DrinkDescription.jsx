@@ -154,11 +154,11 @@ const DrinkDescription = ({ route }) => {
   // console.log("DrinkDescriptionData::storkey", selectedDrinkData.storekey);
   // console.log("DrinkDescriptionData::drinkid", selectedDrinkData.drinkid);
   const isFocused = useIsFocused();
-  navigation.setOptions({
-    headerStyle: { backgroundColor: "#603C30" },
-    headerTintColor: "#F8A621",
-  });
   useEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: "#603C30" },
+      headerTintColor: "#F8A621",
+    });
     const fetchData = async () => {
       try {
         if (isFocused) {
@@ -179,13 +179,25 @@ const DrinkDescription = ({ route }) => {
           const getImageUrl = querySnapshot.get("imageUrl");
           // console.log(getImageUrl);
           const storageRef = ref(storage, `drinkImages/${getImageUrl}`);
-          getDownloadURL(storageRef)
-            .then((url) => {
-              setImageUrl(url);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          if (getImageUrl) {
+            const storageRef = ref(storage, `drinkImages/${getImageUrl}`);
+            getDownloadURL(storageRef)
+              .then((url) => {
+                setImageUrl(url);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            const storageRef = ref(storage, `drinkImages/filler_icon.png`);
+            getDownloadURL(storageRef)
+              .then((url) => {
+                setImageUrl(url);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
         }
       } catch (error) {
         console.error(error);
@@ -280,12 +292,14 @@ const DrinkDescription = ({ route }) => {
 
         <View style={styles.top}>
           {/* Drink Name */}
-          <Text style={styles.drinkName}>{selectedDrinkName}</Text>
+          <Text style={[styles.drinkName, styles.headingColor]}>
+            {selectedDrinkName}
+          </Text>
           <View style={styles.row1}>
             <View style={styles.row}>
               <Text>Recipe By:</Text>
               <View style={styles.username}>
-                <Text style={{ color: "#EBDBCC" }}>CoffeeCraze</Text>
+                <Text style={{ color: "#FFFFFF" }}>CoffeeCraze</Text>
               </View>
             </View>
             <View style={styles.icon}>
@@ -302,14 +316,16 @@ const DrinkDescription = ({ route }) => {
 
         <View style={styles.middle}>
           {/* Title */}
-          <Text style={styles.title}>How To Order</Text>
+          <Text style={[styles.title, styles.headingColor]}>How To Order</Text>
           <Text>{howTo}</Text>
         </View>
 
         <Text style={styles.or}>or</Text>
 
         <View style={styles.bottom}>
-          <Text style={styles.title}>Show The Barista</Text>
+          <Text style={[styles.title, styles.headingColor]}>
+            Show The Barista
+          </Text>
         </View>
       </>
     );
@@ -335,19 +351,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
+    backgroundColor: "#eacdb7",
   },
   // Inner container
   sizeOfColumn: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     // paddingBottom: 15,
   },
   // Image
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 5,
   },
 
   image: {
+    borderRadius: 15,
     height: 300,
     width: 200,
   },
@@ -359,6 +378,8 @@ const styles = StyleSheet.create({
   },
   drinkName: {
     fontSize: 30,
+    marginBottom: 10,
+    fontWeight: 400,
   },
   row: {
     flexDirection: "row",
@@ -397,6 +418,13 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 22,
+    fontWeight: 500,
+    paddingBottom: 5,
   },
+
+  headingColor: {
+    color: "#603C30",
+  },
+  textColor: {},
 });
 export default DrinkDescription;

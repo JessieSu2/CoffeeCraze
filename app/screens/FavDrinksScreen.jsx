@@ -20,13 +20,24 @@ const FavDrink = (props) => {
   const url = props.imageUrl;
   const storageRef = ref(storage, `drinkImages/${url}`);
   console.log("CoffeeShops::Shops", props);
-  getDownloadURL(storageRef)
-    .then((url) => {
-      setImageUrl(url);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  if (url) {
+    getDownloadURL(storageRef)
+      .then((url) => {
+        setImageUrl(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    const storageRef = ref(storage, `drinkImages/filler_icon.png`);
+    getDownloadURL(storageRef)
+      .then((url) => {
+        setImageUrl(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <TouchableOpacity
       onPress={() => {
@@ -44,7 +55,13 @@ const FavDrink = (props) => {
         <View style={styles.image}>
           <Image
             source={{ uri: imageUrl }}
-            style={{ flex: 1, resizeMode: "contain" }}
+            style={{
+              flex: 1,
+              resizeMode: "contain",
+              height: 100,
+              width: 70,
+              borderRadius: 5,
+            }}
           />
         </View>
         <Text style={styles.text}>{name}</Text>
@@ -54,17 +71,19 @@ const FavDrink = (props) => {
 };
 
 function FavDrinks({ route }) {
+  useEffect(() => {
+    navigation.setOptions({
+      headerStyle: { backgroundColor: "#603C30" },
+      headerTintColor: "#F8A621",
+      headerBackTitle: "Back",
+    });
+  }, []);
   //   const [drinks, setDrinks] = useState([]);
   const navigation = useNavigation();
   const drinks = route.params.drinks;
   const key = route.params.mykey;
   console.log("FavDrinksScreen::key", route.params.mykey);
   console.log("FavDrinksScreen:", drinks);
-  navigation.setOptions({
-    headerStyle: { backgroundColor: "#603C30" },
-    headerTintColor: "#F8A621",
-    headerBackTitle: "Back",
-  });
   const favStoreDrinks = drinks
     .filter(function (item) {
       return item.storekey == key;
@@ -98,7 +117,7 @@ function FavDrinks({ route }) {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       {/* <Drink name={drinks.drinkname} />
       <Drink name="Rainbow Drink" /> */}
       <RenderDrinks />
@@ -107,6 +126,9 @@ function FavDrinks({ route }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#eacdb7",
+  },
   drink: {
     justifyContent: "space-between",
     backgroundColor: "#603C30",
@@ -124,8 +146,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    height: 100,
-    aspectRatio: 1,
     resizeMode: "contain",
   },
 });

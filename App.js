@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  useColorScheme,
 } from "react-native";
 import CoffeeShops from "./app/screens/CoffeeShopsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -25,6 +24,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import DrinkDescription from "./app/screens/DrinkDescription";
 import Login from "./app/screens/Login";
 import FavDrinks from "./app/screens/FavDrinksScreen";
+import Register from "./app/screens/Register";
 const BottomTab = createBottomTabNavigator();
 const ShopStack = createStackNavigator();
 const FavStack = createStackNavigator();
@@ -52,7 +52,8 @@ function TabNavigator() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#F8A621",
-        tabBarInactiveTintColor: "#EFE4C8",
+        // tabBarInactiveTintColor: "#EFE4C8",
+        tabBarInactiveTintColor: "#FFFFFF",
       })}
     >
       <BottomTab.Screen name="Stores" component={ShopStackNavigator} />
@@ -122,7 +123,6 @@ function FavNavigator() {
     </FavStack.Navigator>
   );
 }
-
 export default function App() {
   return (
     <SafeAreaProvider>
@@ -147,6 +147,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="Home"
             component={TabNavigator}
             options={{ headerShown: false }}
@@ -159,16 +164,4 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#EBDBCC",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  pads: {
-    paddingTop: 15,
-  },
-});
 //
