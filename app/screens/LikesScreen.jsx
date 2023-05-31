@@ -168,7 +168,7 @@ function Likes() {
         <SafeAreaView style={styles.container}>
           <View style={styles.centered}>
             <Text style={{ color: "#603C30", fontSize: 18 }}>
-              Find your coffee that fills your craze!
+              Find the coffee that fills your craze!
             </Text>
             <LottieView
               autoPlay
@@ -186,7 +186,7 @@ function Likes() {
                 navigation.navigate("Shops");
               }}
             >
-              <Text style={styles.buttonText}>Find Your Coffe Craze!</Text>
+              <Text style={styles.buttonText}>Find Your Coffee Craze!</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
