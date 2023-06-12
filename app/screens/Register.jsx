@@ -44,6 +44,8 @@ function Register() {
           password: password,
           displayName: displayName,
         });
+        setDoc(doc(db, "favorites", `${user.uid}`), {
+        });
         updateProfile(auth.currentUser, { displayName: displayName }).catch(
           (err) => console.log(err)
         );

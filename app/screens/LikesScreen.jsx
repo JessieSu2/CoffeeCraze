@@ -24,6 +24,7 @@ function Likes() {
   const navigation = useNavigation();
   const [shops, setShops] = useState([]);
   const [drinks, setFavDrinks] = useState([]);
+  const [present, setPresent] = useState(false);
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
@@ -144,20 +145,8 @@ function Likes() {
       );
     });
   };
-  const config = {
-    animation: "spring",
-    config: {
-      stiffness: 1000,
-      damping: 500,
-      mass: 3,
-      overshootClamping: true,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 0.01,
-    },
-  };
   if (currentUser) {
-    console.log(shops);
-    if (shops == []) {
+    if (shops.length != 0) {
       return (
         <SafeAreaView style={styles.container}>
           <RenderShops />

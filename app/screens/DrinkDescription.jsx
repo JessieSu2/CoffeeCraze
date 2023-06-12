@@ -97,6 +97,7 @@ const updateLiked = async (drinkId, liked) => {
     try {
       const docRef = doc(db, "favorites", uid);
       const documentSnapshot = await getDoc(docRef);
+      console.log(documentSnapshot);
       updateDoc(
         doc(db, "favorites", `${uid}`),
         {
@@ -104,7 +105,7 @@ const updateLiked = async (drinkId, liked) => {
         },
         { merge: true }
       ).catch((error) => {
-        console.log("couldnt update doc");
+        console.log("updateLiked:: couldnt update doc");
         alert(error.message);
       });
     } catch (error) {
